@@ -1,0 +1,93 @@
+[
+  {
+    "Condition": "Tuberculosis",
+    "Year": 2015,
+    "Reported_Cases": 1740000,
+    "Deaths": null,
+    "Mortality_Rate_percent": null,
+    "Affected_Demographics": "All ages; higher among males 15–54; rural>urban; socio-economically vulnerable",
+    "Source": "WHO India TB 2016 factsheet; WHO interim estimates 2016"
+  },
+  {
+    "Condition": "Tuberculosis",
+    "Year": 2016,
+    "Reported_Cases": 1900000,
+    "Deaths": null,
+    "Mortality_Rate_percent": null,
+    "Affected_Demographics": "All ages; higher among males 15–54; rural>urban; socio-economically vulnerable",
+    "Source": "WHO news release 2018 on TB (India notifications 2016)"
+  },
+  {
+    "Condition": "Tuberculosis",
+    "Year": 2023,
+    "Reported_Cases": 2540000,
+    "Deaths": null,
+    "Mortality_Rate_percent": null,
+    "Affected_Demographics": "All ages; higher among males 15–54; rural>urban; socio-economically vulnerable",
+    "Source": "India TB Report 2023 (case notifications 2022/2023)"
+  },
+  {
+    "Condition": "Tuberculosis",
+    "Year": 2024,
+    "Reported_Cases": 2607000,
+    "Deaths": null,
+    "Mortality_Rate_percent": null,
+    "Affected_Demographics": "All ages; higher among males 15–54; rural>urban; socio-economically vulnerable",
+    "Source": "PIB press note on India TB Report 2024 (2.607 million notified)"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2015,
+    "Reported_Cases": 1169000,
+    "Deaths": 384,
+    "Mortality_Rate_percent": 0.033,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "WHO World Malaria Report 2016 (India 2015)"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2017,
+    "Reported_Cases": 844558,
+    "Deaths": 194,
+    "Mortality_Rate_percent": 0.023,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "WHO/NCVBDC compiled figures (2017 India)"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2020,
+    "Reported_Cases": 186532,
+    "Deaths": 93,
+    "Mortality_Rate_percent": 0.05,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "NCVBDC trends / peer-reviewed 2020 figure"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2021,
+    "Reported_Cases": 164522,
+    "Deaths": 94,
+    "Mortality_Rate_percent": 0.057,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "NCVBDC trends / peer-reviewed 2021 figure"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2022,
+    "Reported_Cases": 181375,
+    "Deaths": 83,
+    "Mortality_Rate_percent": 0.046,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "NCVBDC trends / peer-reviewed 2022 figure"
+  },
+  {
+    "Condition": "Malaria",
+    "Year": 2023,
+    "Reported_Cases": 227564,
+    "Deaths": 83,
+    "Mortality_Rate_percent": 0.036,
+    "Affected_Demographics": "Higher in rural/tribal regions; males 15–44; P. vivax and P. falciparum mix",
+    "Source": "NCVBDC 2023 summary (ResearchGate/NCVBDC)"
+  }
+ 
+]
