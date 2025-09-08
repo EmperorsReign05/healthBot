@@ -1,81 +1,83 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { MetricCard } from "./metric-card"
 import { TrendChart } from "./trend-chart"
 import { DiseaseDistributionChart } from "./disease-distribution-chart"
-import { MetricCard } from "./metric-card"
-import { Activity, AlertTriangle, MapPin, TrendingUp } from "lucide-react"
-import type { HealthAlert, DiseaseMetrics } from "@/lib/types"
-// Import your Supabase client
-import { supabase } from "@/lib/supabaseClient" // Make sure you have created this file
+import { BarChart3, Users, AlertTriangle, Stethoscope } from "lucide-react"
+
+// Helper functions to generate mock data
+const generateTrendData = () => {
+  const data = []
+  for (let i = 30; i >= 0; i--) {
+    data.push({
+      date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      cases: Math.floor(Math.random() * (200 - 50 + 1)) + 50,
+    })
+  }
+  return data
+}
+
+const generateStateDistribution = () => {
+  const states = ["Rajasthan", "Gujarat", "Punjab", "Haryana", "Uttar Pradesh"]
+  return states.map((state) => ({
+    name: state,
+    value: Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000,
+  }))
+}
 
 export function DashboardView() {
-  const [alerts, setAlerts] = useState<HealthAlert[]>([])
-  const [metrics, setMetrics] = useState<DiseaseMetrics>({
-    totalDistricts: 0,
-    activeOutbreaks: 0,
-    mostAffectedDisease: "N/A",
-    totalCases: 0,
-  })
-
-  // Fetch data from Supabase on component mount
-  useEffect(() => {
-    const fetchAlerts = async () => {
-      const { data, error } = await supabase.from('public_health_alerts').select('*');
-      
-      if (error) {
-        console.error("Error fetching alerts:", error);
-        return;
-      }
-
-      if (data) {
-        const alertsTyped = data as HealthAlert[];
-        setAlerts(alertsTyped);
-
-        // Calculate metrics
-        const totalDistricts = alertsTyped.length;
-        const activeOutbreaks = alertsTyped.filter((alert) => alert.level === "Outbreak").length;
-        const totalCases = alertsTyped.reduce((sum, alert) => sum + alert.cases, 0);
-
-        const diseaseStats = alertsTyped.reduce(
-          (acc, alert) => {
-            acc[alert.disease] = (acc[alert.disease] || 0) + alert.cases;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
-
-        const mostAffectedDisease = Object.keys(diseaseStats).length > 0 
-          ? Object.entries(diseaseStats).reduce((a, b) => (a[1] > b[1] ? a : b))[0] 
-          : "N/A";
-
-        setMetrics({
-          totalDistricts,
-          activeOutbreaks,
-          mostAffectedDisease,
-          totalCases,
-        });
-      }
-    };
-
-    fetchAlerts();
-  }, []);
-
-  // (The rest of the component remains the same for now)
-  // ... functions to generate chart data ...
-  const generateTrendData = () => {
-    // ... (rest of the function)
-  }
-  const generateStateDistribution = () => {
-    // ... (rest of the function)
-  }
-
-  const trendData = generateTrendData();
-  const stateData = generateStateDistribution();
+  const trendData = generateTrendData()
+  const stateData = generateStateDistribution()
 
   return (
-    // ... (rest of the JSX)
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Health Dashboard</h2>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <MetricCard
+          title="Total Cases"
+          value="12,345"
+          change="+2.5%"
+          icon={BarChart3}
+        />
+        <MetricCard
+          title="Active Alerts"
+          value="78"
+          change="-5.1%"
+          icon={AlertTriangle}
+        />
+        <MetricCard
+          title="Population Covered"
+          value="2.5M"
+          change="+10%"
+          icon={Users}
+        />
+        <MetricCard
+          title="Most Common Disease"
+          value="Influenza"
+          icon={Stethoscope}
+        />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Case Trends (Last 30 Days)</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <TrendChart data={trendData} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Disease Distribution by State</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DiseaseDistributionChart data={stateData} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }
