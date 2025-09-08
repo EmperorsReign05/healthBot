@@ -72,23 +72,36 @@ export function ChatInterface() {
     setMessages((prev) => [...prev, userMessage])
     setIsTyping(true)
 
-    // Simulate bot response delay
-    setTimeout(
-      () => {
-        const isUrgent = checkForUrgentSymptoms(content)
-        const botResponse: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          content: generateBotResponse(content),
-          sender: "bot",
-          timestamp: new Date(),
-          isUrgent,
-        }
-
-        setMessages((prev) => [...prev, botResponse])
-        setIsTyping(false)
-      },
-      1000 + Math.random() * 1000,
-    )
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: content, language }),
+      })
+      const data = await res.json()
+      const botText = data?.response || generateBotResponse(content)
+      const isUrgent = checkForUrgentSymptoms(content)
+      const botResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: botText,
+        sender: "bot",
+        timestamp: new Date(),
+        isUrgent,
+      }
+      setMessages((prev) => [...prev, botResponse])
+    } catch {
+      const isUrgent = checkForUrgentSymptoms(content)
+      const botResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: generateBotResponse(content),
+        sender: "bot",
+        timestamp: new Date(),
+        isUrgent,
+      }
+      setMessages((prev) => [...prev, botResponse])
+    } finally {
+      setIsTyping(false)
+    }
   }
 
   const handleQuickAction = (actionId: string) => {
