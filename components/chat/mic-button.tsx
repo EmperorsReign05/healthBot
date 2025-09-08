@@ -7,12 +7,17 @@ import type { Language } from "@/lib/types"
 
 interface MicButtonProps {
   language: Language
+  onTranscript?: (text: string) => void
 }
 
-export function MicButton({ language }: MicButtonProps) {
+export function MicButton({ language, onTranscript }: MicButtonProps) {
   const handleMicClick = () => {
     // Dummy handler for voice input
     console.log("Voice input clicked")
+    // For now, just call onTranscript with empty string if provided
+    if (onTranscript) {
+      onTranscript("")
+    }
   }
 
   const tooltip = language === "en" ? "Voice input (coming soon)" : "आवाज इनपुट (जल्द आ रहा है)"

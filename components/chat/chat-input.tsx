@@ -4,14 +4,15 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { MicButton } from "./mic-button"; // Make sure this path is correct
+import { MicButton } from "./mic-button";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isLoading: boolean;
+  language: "en" | "hi";
 }
 
-export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
+export function ChatInput({ onSendMessage, isLoading, language }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,10 +33,10 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
       onSubmit={handleSubmit}
       className="flex w-full items-center space-x-2 p-2"
     >
-      <MicButton onTranscript={handleTranscript} />
+      <MicButton language={language} onTranscript={handleTranscript} />
       <Input
         type="text"
-        placeholder="Type a message..."
+        placeholder={language === "en" ? "Type a message..." : "संदेश टाइप करें..."}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         disabled={isLoading}

@@ -6,3 +6,5 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 // 2. The 'export' keyword is crucial here. It's what makes this file a module.
 export const supabase = createClient(supabaseUrl, supabaseKey)
+
+export { createClient }
