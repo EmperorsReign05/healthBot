@@ -1,47 +1,48 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { MicButton } from "./mic-button"
-import { Send } from "lucide-react"
-import type { Language } from "@/lib/types"
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
+import { MicButton } from "./mic-button"; // Make sure this path is correct
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void
-  language: Language
+  onSendMessage: (message: string) => void;
+  isLoading: boolean;
 }
 
-export function ChatInput({ onSendMessage, language }: ChatInputProps) {
-  const [message, setMessage] = useState("")
+export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
+  const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (message.trim()) {
-      onSendMessage(message.trim())
-      setMessage("")
+    e.preventDefault();
+    if (inputValue.trim() && !isLoading) {
+      onSendMessage(inputValue);
+      setInputValue("");
     }
-  }
+  };
 
-  const placeholder =
-    language === "en"
-      ? "Ask about symptoms, prevention, or health concerns..."
-      : "लक्षण, बचाव या स्वास्थ्य संबंधी चिंताओं के बारे में पूछें..."
+  // This function will be called by the MicButton with the live transcript
+  const handleTranscript = (text: string) => {
+    setInputValue(text);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full items-center space-x-2 p-2"
+    >
+      <MicButton onTranscript={handleTranscript} />
       <Input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1"
+        type="text"
+        placeholder="Type a message..."
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        disabled={isLoading}
       />
-      <MicButton language={language} />
-      <Button type="submit" disabled={!message.trim()}>
-        <Send className="w-4 h-4" />
+      <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()}>
+        <Send className="h-4 w-4" />
       </Button>
     </form>
-  )
+  );
 }

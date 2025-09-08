@@ -1,32 +1,99 @@
-[
+{
+  "pregnantWomen": [
     {
-      "vaccine": "BCG",
-      "dose": "1st",
-      "age": "At birth",
-      "disease": "Tuberculosis"
+      "vaccine": "Td-1 (Tetanus and adult Diphtheria)",
+      "when": "Early in pregnancy",
+      "dose": "0.5 ml",
+      "protectsAgainst": "Tetanus and Diphtheria"
     },
     {
-      "vaccine": "Hepatitis B",
-      "dose": "Birth dose",
-      "age": "At birth",
-      "disease": "Hepatitis B"
+      "vaccine": "Td-2",
+      "when": "4 weeks after Td-1",
+      "dose": "0.5 ml",
+      "protectsAgainst": "Tetanus and Diphtheria"
     },
     {
-      "vaccine": "OPV",
-      "dose": "0 dose",
-      "age": "At birth",
-      "disease": "Poliomyelitis"
+      "vaccine": "Td-Booster",
+      "when": "If previously vaccinated within the last 3 years",
+      "dose": "0.5 ml",
+      "protectsAgainst": "Tetanus and Diphtheria"
+    }
+  ],
+  "infants": [
+    {
+      "when": "At Birth",
+      "vaccines": [
+        { "name": "BCG (Bacillus Calmette-Guerin)", "protectsAgainst": "Tuberculosis" },
+        { "name": "Hepatitis B - Birth Dose", "protectsAgainst": "Hepatitis B" },
+        { "name": "OPV-0 (Oral Polio Vaccine)", "protectsAgainst": "Poliomyelitis" }
+      ]
     },
     {
-      "vaccine": "OPV",
-      "dose": "1st, 2nd & 3rd dose",
-      "age": "6, 10 & 14 weeks",
-      "disease": "Poliomyelitis"
+      "when": "At 6 Weeks",
+      "vaccines": [
+        { "name": "OPV-1", "protectsAgainst": "Poliomyelitis" },
+        { "name": "Pentavalent-1", "protectsAgainst": "Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib" },
+        { "name": "Rotavirus Vaccine (RVV)-1", "protectsAgainst": "Rotavirus Diarrhea" },
+        { "name": "fIPV-1 (Fractional Inactivated Polio Vaccine)", "protectsAgainst": "Poliomyelitis" },
+        { "name": "PCV-1 (Pneumococcal Conjugate Vaccine)", "protectsAgainst": "Pneumonia and Meningitis" }
+      ]
     },
     {
-      "vaccine": "DPT",
-      "dose": "1st, 2nd & 3rd dose",
-      "age": "6, 10 & 14 weeks",
-      "disease": "Diphtheria, Pertussis, Tetanus"
+      "when": "At 10 Weeks",
+      "vaccines": [
+        { "name": "OPV-2", "protectsAgainst": "Poliomyelitis" },
+        { "name": "Pentavalent-2", "protectsAgainst": "Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib" },
+        { "name": "Rotavirus Vaccine (RVV)-2", "protectsAgainst": "Rotavirus Diarrhea" }
+      ]
+    },
+    {
+      "when": "At 14 Weeks",
+      "vaccines": [
+        { "name": "OPV-3", "protectsAgainst": "Poliomyelitis" },
+        { "name": "Pentavalent-3", "protectsAgainst": "Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib" },
+        { "name": "fIPV-2", "protectsAgainst": "Poliomyelitis" },
+        { "name": "Rotavirus Vaccine (RVV)-3", "protectsAgainst": "Rotavirus Diarrhea" },
+        { "name": "PCV-2", "protectsAgainst": "Pneumonia and Meningitis" }
+      ]
+    },
+    {
+      "when": "At 9-12 Months",
+      "vaccines": [
+        { "name": "MR-1 (Measles & Rubella)", "protectsAgainst": "Measles and Rubella" },
+        { "name": "JE-1 (Japanese Encephalitis)", "protectsAgainst": "Japanese Encephalitis (in endemic areas)" },
+        { "name": "PCV Booster", "protectsAgainst": "Pneumonia and Meningitis" },
+        { "name": "Vitamin A (1st dose)", "protectsAgainst": "Vitamin A deficiency" }
+      ]
+    }
+  ],
+  "children": [
+    {
+      "when": "16-24 Months",
+      "vaccines": [
+        { "name": "DPT Booster-1", "protectsAgainst": "Diphtheria, Pertussis, Tetanus" },
+        { "name": "MR-2 (Measles & Rubella)", "protectsAgainst": "Measles and Rubella" },
+        { "name": "OPV Booster", "protectsAgainst": "Poliomyelitis" },
+        { "name": "JE-2", "protectsAgainst": "Japanese Encephalitis (in endemic areas)" },
+        { "name": "Vitamin A (2nd dose)", "protectsAgainst": "Vitamin A deficiency" }
+      ]
+    },
+    {
+      "when": "5-6 Years",
+      "vaccines": [
+        { "name": "DPT Booster-2", "protectsAgainst": "Diphtheria, Pertussis, Tetanus" }
+      ]
+    },
+    {
+      "when": "10 Years",
+      "vaccines": [
+        { "name": "Td (Tetanus and adult Diphtheria)", "protectsAgainst": "Tetanus and Diphtheria" }
+      ]
+    },
+    {
+      "when": "16 Years",
+      "vaccines": [
+        { "name": "Td", "protectsAgainst": "Tetanus and Diphtheria" }
+      ]
     }
   ]
+}

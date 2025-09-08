@@ -1,14 +1,34 @@
 [
     {
-        "question": "What are the common symptoms of COVID-19?",
-        "answer": "The most common symptoms of COVID-19 are fever, tiredness, and a dry cough. Some patients may have aches and pains, nasal congestion, a runny nose, a sore throat, or diarrhea."
+      "question": "What are the common symptoms of COVID-19?",
+      "answer": "The most common symptoms of COVID-19 are fever, tiredness, and a dry cough. Some patients may have aches and pains, nasal congestion, a runny nose, a sore throat, or diarrhea."
     },
     {
-        "question": "How does COVID-19 spread?",
-        "answer": "The virus that causes COVID-19 is mainly transmitted through droplets generated when an infected person coughs, sneezes, or exhales. These droplets are too heavy to hang in the air and quickly fall and land on floors or surfaces."
+      "question": "How does COVID-19 spread?",
+      "answer": "The virus that causes COVID-19 is mainly transmitted through droplets generated when an infected person coughs, sneezes, or exhales. These droplets are too heavy to hang in the air and quickly fall and land on floors or surfaces."
     },
     {
-        "question": "What can I do to protect myself and prevent the spread of the disease?",
-        "answer": "You can reduce your chances of being infected or spreading COVID-19 by taking some simple precautions: regularly and thoroughly clean your hands with an alcohol-based hand rub or wash them with soap and water, maintain at least a 1-meter (3 feet) distance between yourself and others, avoid going to crowded places, avoid touching your eyes, nose, and mouth, and make sure you and the people around you follow good respiratory hygiene."
+      "question": "What can I do to protect myself from COVID-19?",
+      "answer": "You can reduce your chances of being infected by regularly washing your hands with soap and water, maintaining at least a 1-meter distance from others, avoiding crowded places, and wearing a mask."
+    },
+    {
+      "question": "What are the symptoms of Malaria?",
+      "answer": "Common symptoms of Malaria include fever, chills, headache, muscle aches, and fatigue. Symptoms usually appear 10 to 15 days after the bite of an infected mosquito."
+    },
+    {
+      "question": "How can I prevent Dengue and Malaria?",
+      "answer": "The best way to prevent Dengue and Malaria is to protect yourself from mosquito bites. Use mosquito repellent, wear long-sleeved clothes, and ensure there is no stagnant water around your home where mosquitoes can breed. Using mosquito nets at night is also very effective."
+    },
+    {
+      "question": "Why is washing hands so important?",
+      "answer": "Washing your hands with soap and water is one of the most effective ways to prevent the spread of germs. It removes bacteria and viruses, protecting you from illnesses like diarrhea, respiratory infections, and skin infections."
+    },
+    {
+      "question": "What is considered a balanced diet?",
+      "answer": "A balanced diet includes a variety of foods from different groups: cereals and grains for energy, pulses and legumes for protein, fruits and vegetables for vitamins and minerals, and a moderate amount of fats and oils. Drinking plenty of clean water is also essential."
+    },
+    {
+      "question": "How much water should I drink every day?",
+      "answer": "It is generally recommended to drink at least 8 to 10 glasses (about 2 to 2.5 liters) of water per day. Your need may increase in hot weather or if you are physically active."
     }
-]
+  ]

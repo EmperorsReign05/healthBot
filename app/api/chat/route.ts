@@ -10,7 +10,6 @@ export async function POST(req: Request) {
   try {
     const { message, language } = await req.json();
 
-    // Validate input
     if (!message || typeof message !== 'string') {
       return new Response(JSON.stringify({ error: "Invalid message" }), { 
         status: 400,
@@ -18,100 +17,63 @@ export async function POST(req: Request) {
       });
     }
 
-    console.log('Received message:', message);
-    console.log('Language:', language);
-
-    // Use original message for retrieval and LLM synthesis
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const retrievalQuery = message;
 
-    // Build context from deterministic keywords AND vector search, then always call LLM
+    // --- Step 1: Retrieve Context ---
+    // We still search our local data first to see if we have a specific, high-quality answer.
     const keywordContext = await answerFromKeywords(retrievalQuery, { language });
     const vectorStore = await getVectorStore();
-    // If Hindi, try translating to English ONLY for retrieval to help vector search
-    let vectorQuery = retrievalQuery
+    
+    let vectorQuery = retrievalQuery;
     if (language === 'hi') {
       try {
         const tr = await model.generateContent({
           contents: [{ role: 'user', parts: [{ text: `Translate to English, minimal, no extra words:\n${retrievalQuery}` }] }],
           generationConfig: { temperature: 0.0, maxOutputTokens: 64 }
-        })
-        vectorQuery = tr.response.text().trim() || retrievalQuery
+        });
+        vectorQuery = tr.response.text().trim() || retrievalQuery;
       } catch {}
     }
+    
     const vectorContext = await vectorStore.getRelevantContext(vectorQuery, 0.12);
     const retrievedContext = [keywordContext, vectorContext].filter(Boolean).join('\n\n');
 
-    console.log('Retrieved context length:', retrievedContext?.length || 0);
-
-    // Initialize Gemini model
-
+    // --- Step 2: Generate a Flexible Prompt ---
+    // This new prompt tells the AI how to behave. It prioritizes local data but allows general knowledge.
     const prompt = `System:
-You are Swasthya Mitra, a helpful public health assistant. Use ONLY the context below. If the answer is missing, reply exactly with ${language === "hi" ? '"डेटासेट में यह जानकारी उपलब्ध नहीं है।"' : '"Not found in dataset."'}. Otherwise, compose a clear, single paragraph in ${language === "hi" ? 'Hindi' : 'English'} for laypersons, integrating relevant fields (Symptoms, Prevention, Treatment, Year, Region, Source). If the question asks for symptoms and prevention, include both when available.
+You are Swasthya Mitra, a helpful public health assistant. Your goal is to answer the user's question.
+- First, check if the "CONTEXT" section below contains the answer. If it does, use that information to form your response.
+- If the context is empty or does not answer the question (especially for general health queries or symptom analysis), use your general knowledge to provide a helpful, safe, and informative answer.
+- Respond in a clear, single paragraph in ${language === "hi" ? 'Hindi' : 'English'}.
 
-Context (multiple records):
-${retrievedContext}
+CONTEXT:
+${retrievedContext || "No specific context found."}
 
 User question:
 ${message}`;
 
-    // Generate response using Gemini
+    // --- Step 3: Call the AI and Return the Response ---
+    // We now only need one call to the AI, making the process cleaner and more efficient.
     const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: prompt.slice(0, 12000) }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 768 }
+      generationConfig: { temperature: 0.4, maxOutputTokens: 768 } // Temperature slightly increased for more creative answers
     });
-    const response = await result.response;
-    const text = response.text();
 
-    console.log('Generated response length:', text.length);
-
-    return new Response(JSON.stringify({ 
-      response: text,
-      contextUsed: retrievedContext.length > 0 
-    }), { 
+    const text = result.response.text();
+    
+    return new Response(JSON.stringify({ response: text }), { 
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
     console.error("Chat API Error:", error);
-    
-    // Return appropriate error message
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    
     return new Response(JSON.stringify({ 
       error: "Failed to process your request",
       details: errorMessage 
     }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-}
-
-// Handle GET request for testing
-export async function GET() {
-  try {
-    // Test if Gemini API is working
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
-    const result = await model.generateContent("Say hello");
-    const response = await result.response;
-    
-    return new Response(JSON.stringify({ 
-      status: "API is working",
-      gemini: "Connected",
-      timestamp: new Date().toISOString()
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ 
-      status: "API Error",
-      error: error instanceof Error ? error.message : "Unknown error"
-    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
