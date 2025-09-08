@@ -1,25 +1,24 @@
-"use client"
+"use client";
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-// This interface now correctly matches the data being passed from the dashboard view.
 interface DistributionChartProps {
   data: {
-    name: string
-    value: number
-  }[]
+    name: string;
+    value: number;
+  }[];
 }
 
 export function DiseaseDistributionChart({ data }: DistributionChartProps) {
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data} layout="vertical">
+      <BarChart data={data} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
         <XAxis type="number" />
         <YAxis type="category" dataKey="name" width={80} />
-        <Tooltip cursor={{ fill: 'transparent' }} />
+        <Tooltip />
         <Legend />
-        <Bar dataKey="value" fill="#82ca9d" name="Reported Cases" />
+        <Bar dataKey="value" fill="#82ca9d" name="Cases" />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }

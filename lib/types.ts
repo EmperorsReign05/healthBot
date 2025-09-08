@@ -1,27 +1,18 @@
-export interface HealthAlert {
-  state: string
-  district: string
-  disease: string
-  week_iso: string
-  level: "None" | "Watch" | "Warning" | "Outbreak"
-  cases: number
-  lat: number
-  lng: number
-}
+// lib/types.ts
 
-export interface ChatMessage {
-  id: string
-  content: string
-  sender: "user" | "bot"
-  timestamp: Date
-  isUrgent?: boolean
-}
+// The 'export' keyword makes this type available to other files.
+export type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-export type Language = "en" | "hi"
-
-export interface DiseaseMetrics {
-  totalDistricts: number
-  activeOutbreaks: number
-  mostAffectedDisease: string
-  totalCases: number
-}
+export type HealthAlert = {
+  id: number;
+  disease: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+  alert_level: "High" | "Medium" | "Low";
+  cases: number;
+  timestamp: string;
+};

@@ -1,145 +1,74 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { ChatWindow } from "./chat-window"
-import { ChatInput } from "./chat-input"
-import { QuickActions } from "./quick-actions"
-import { LangToggle } from "./lang-toggle"
-import { Card } from "@/components/ui/card"
-import type { ChatMessage, Language } from "@/lib/types"
-import { URGENT_KEYWORDS } from "@/lib/constants"
+import { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { ChatWindow } from "./chat-window";
+import { ChatInput } from "./chat-input";
+import { QuickActions } from "./quick-actions";
+import { LangToggle } from "./lang-toggle";
+import type { Message } from "@/lib/types";
 
 export function ChatInterface() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "1",
-      content: "Hello! I'm your health assistant. How can I help you today?",
-      sender: "bot",
-      timestamp: new Date(),
-    },
-  ])
-  const [language, setLanguage] = useState<Language>("en")
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    const welcomeMessage = language === 'hi'
+      ? "नमस्ते! मैं स्वास्थ्य मित्र हूँ। मैं आपकी स्वास्थ्य संबंधी जानकारी में कैसे मदद कर सकता हूँ?"
+      : "Hello! I'm Swasthya Mitra. How can I help you with your health information needs today?";
+    setMessages([{ role: "assistant", content: welcomeMessage }]);
+  }, [language]);
 
-  const checkForUrgentSymptoms = (message: string): boolean => {
-    return URGENT_KEYWORDS.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()))
-  }
+  const handleSendMessage = async (message: string) => {
+    if (!message.trim()) return;
 
-  const generateBotResponse = (userMessage: string): string => {
-    const isUrgent = checkForUrgentSymptoms(userMessage)
-
-    if (isUrgent) {
-      return language === "en"
-        ? "I understand you're experiencing concerning symptoms. Please seek immediate medical attention or call emergency services. This is not a substitute for professional medical care."
-        : "मैं समझता हूं कि आप चिंताजनक लक्षणों का अनुभव कर रहे हैं। कृपया तुरंत चिकित्सा सहायता लें या आपातकालीन सेवाओं को कॉल करें।"
-    }
-
-    // Simple response logic for demo
-    if (userMessage.toLowerCase().includes("fever")) {
-      return language === "en"
-        ? "For fever, rest and stay hydrated. Monitor your temperature and consult a doctor if it persists above 101°F (38.3°C) for more than 3 days."
-        : "बुखार के लिए, आराम करें और पानी पिएं। अपना तापमान देखते रहें और यदि यह 3 दिन से अधिक 101°F (38.3°C) से ऊपर रहे तो डॉक्टर से सलाह लें।"
-    }
-
-    if (userMessage.toLowerCase().includes("dengue")) {
-      return language === "en"
-        ? "Dengue symptoms include high fever, severe headache, and body aches. Prevent mosquito breeding by removing stagnant water. Seek medical care if symptoms worsen."
-        : "डेंगू के लक्षणों में तेज बुखार, सिरदर्द और शरीर में दर्द शामिल है। रुके हुए पानी को हटाकर मच्छरों के प्रजनन को रोकें।"
-    }
-
-    return language === "en"
-      ? "Thank you for your question. For specific medical concerns, please consult with a healthcare professional. I can provide general health information and prevention tips."
-      : "आपके प्रश्न के लिए धन्यवाद। विशिष्ट चिकित्सा चिंताओं के लिए, कृपया किसी स्वास्थ्य पेशेवर से सलाह लें।"
-  }
-
-  const handleSendMessage = async (content: string) => {
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      content,
-      sender: "user",
-      timestamp: new Date(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setIsTyping(true)
+    const newMessages: Message[] = [...messages, { role: "user", content: message }];
+    setMessages(newMessages);
+    setIsLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content, language }),
-      })
-      const data = await res.json()
-      const botText = data?.response || generateBotResponse(content)
-      const isUrgent = checkForUrgentSymptoms(content)
-      const botResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        content: botText,
-        sender: "bot",
-        timestamp: new Date(),
-        isUrgent,
+        body: JSON.stringify({ message: message, language: language }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get a response from the server.");
       }
-      setMessages((prev) => [...prev, botResponse])
-    } catch {
-      const isUrgent = checkForUrgentSymptoms(content)
-      const botResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        content: generateBotResponse(content),
-        sender: "bot",
-        timestamp: new Date(),
-        isUrgent,
-      }
-      setMessages((prev) => [...prev, botResponse])
+
+      const data = await response.json();
+      setMessages([...newMessages, { role: "assistant", content: data.response }]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      const errorMessage = language === 'hi'
+        ? "माफ़ कीजिये, कुछ गड़बड़ हो गई। कृपया पुनः प्रयास करें।"
+        : "Sorry, something went wrong. Please try again.";
+      setMessages([...newMessages, { role: "assistant", content: errorMessage }]);
     } finally {
-      setIsTyping(false)
+      setIsLoading(false);
     }
-  }
-
-  const handleQuickAction = (actionId: string) => {
-    const actions = {
-      symptoms:
-        language === "en"
-          ? "What are the common symptoms of dengue, malaria, and diarrhea?"
-          : "डेंगू, मलेरिया और दस्त के सामान्य लक्षण क्या हैं?",
-      prevention:
-        language === "en" ? "How can I prevent mosquito-borne diseases?" : "मैं मच्छर जनित बीमारियों से कैसे बच सकता हूं?",
-      alerts:
-        language === "en" ? "What are the current health alerts in my area?" : "मेरे क्षेत्र में वर्तमान स्वास्थ्य चेतावनी क्या हैं?",
-    }
-
-    const message = actions[actionId as keyof typeof actions]
-    if (message) {
-      handleSendMessage(message)
-    }
-  }
+  };
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <div className="p-4 border-b flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h2 className="font-semibold">Health Assistant</h2>
-          <QuickActions onAction={handleQuickAction} language={language} />
+    <div style={{ maxWidth: '768px', margin: '2rem auto' }}>
+      <Card>
+        <div style={{ padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600' }}>Chat</h2>
+          <LangToggle language={language} setLanguage={setLanguage} />
         </div>
-        <LangToggle language={language} onLanguageChange={setLanguage} />
-      </div>
+        
+        <ChatWindow messages={messages} isLoading={isLoading} />
+        
+        <div style={{ padding: '0 1rem' }}>
+          <QuickActions onActionClick={handleSendMessage} language={language} />
+        </div>
 
-      <div className="flex-1 overflow-hidden">
-        <ChatWindow messages={messages} isTyping={isTyping} language={language} />
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="p-4 border-t">
-        <ChatInput onSendMessage={handleSendMessage} language={language} />
-      </div>
-    </Card>
-  )
+        <div style={{ borderTop: '1px solid var(--border)', padding: '0.5rem' }}>
+          <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+        </div>
+      </Card>
+    </div>
+  );
 }

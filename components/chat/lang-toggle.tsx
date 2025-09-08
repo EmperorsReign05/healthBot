@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import type { Language } from "@/lib/types"
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface LangToggleProps {
-  language: Language
-  onLanguageChange: (language: Language) => void
+  language: 'en' | 'hi';
+  setLanguage: (lang: 'en' | 'hi') => void;
 }
 
-export function LangToggle({ language, onLanguageChange }: LangToggleProps) {
+export function LangToggle({ language, setLanguage }: LangToggleProps) {
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'hi' : 'en');
+  };
+
   return (
-    <div className="flex items-center gap-2">
-      <Label htmlFor="language-toggle" className="text-sm font-medium">
-        EN
-      </Label>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <Label htmlFor="lang-switch">English</Label>
       <Switch
-        id="language-toggle"
-        checked={language === "hi"}
-        onCheckedChange={(checked) => onLanguageChange(checked ? "hi" : "en")}
+        id="lang-switch"
+        checked={language === 'hi'}
+        onCheckedChange={toggleLanguage}
       />
-      <Label htmlFor="language-toggle" className="text-sm font-medium">
-        हिंदी
-      </Label>
+      <Label htmlFor="lang-switch">हिन्दी</Label>
     </div>
-  )
+  );
 }

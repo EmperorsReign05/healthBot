@@ -1,51 +1,29 @@
-"use client"
-
-import { format } from "date-fns" // 1. Import the format function
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { Bot, User } from "lucide-react"
-import type { ChatMessage, Language } from "@/lib/types"
-import { cn } from "@/lib/utils"
-
 interface MessageBubbleProps {
-  message: ChatMessage
-  language: Language
-  isTyping?: boolean
+  role: 'user' | 'assistant';
+  content: string;
 }
 
-export function MessageBubble({ message, isTyping, language }: MessageBubbleProps) {
-  const isBot = message.sender === "bot"
+export function MessageBubble({ role, content }: MessageBubbleProps) {
+  const isUser = role === 'user';
+
+  const bubbleStyle: React.CSSProperties = {
+    maxWidth: '75%',
+    padding: '0.75rem 1rem',
+    borderRadius: '1rem',
+    marginBottom: '0.5rem',
+    lineHeight: '1.5',
+    backgroundColor: isUser ? 'var(--primary)' : 'var(--border)',
+    color: isUser ? 'var(--primary-foreground)' : 'var(--foreground)',
+    alignSelf: isUser ? 'flex-end' : 'flex-start',
+    marginLeft: isUser ? 'auto' : '0',
+    marginRight: isUser ? '0' : 'auto',
+  };
 
   return (
-    <div className={cn("flex gap-3", isBot ? "justify-start" : "justify-end")}>
-      {isBot && (
-        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-          <Bot className="w-4 h-4 text-primary-foreground" />
-        </div>
-      )}
-
-      <div className={cn("max-w-[80%] space-y-2", !isBot && "flex flex-col items-end")}>
-        <Card className={cn("p-3", isBot ? "bg-muted" : "bg-primary text-primary-foreground ml-auto")}>
-          <p className={cn("text-sm leading-relaxed", isTyping && "animate-pulse")}>{message.content}</p>
-        </Card>
-
-        {isBot && !isTyping && (
-          <Badge variant="secondary" className="text-xs">
-            {language === "en" ? "Not medical advice" : "चिकित्सा सलाह नहीं"}
-          </Badge>
-        )}
-
-        <span className="text-xs text-muted-foreground">
-          {/* 2. Replace toLocaleTimeString with the format function */}
-          {format(new Date(message.timestamp), "p")}
-        </span>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={bubbleStyle}>
+        {content}
       </div>
-
-      {!isBot && (
-        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-          <User className="w-4 h-4 text-secondary-foreground" />
-        </div>
-      )}
     </div>
-  )
+  );
 }

@@ -1,66 +1,67 @@
 "use client"
 
 import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDownIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+// A context to share the selected item between accordion components
+const AccordionContext = React.createContext<{
+  selected: string | null;
+  setSelected: (value: string | null) => void;
+}>({
+  selected: null,
+  setSelected: () => {},
+});
 
-function Accordion({
-  ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-  return <AccordionPrimitive.Root data-slot="accordion" {...props} />
-}
-
-function AccordionItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+// The main Accordion container
+const Accordion = ({ children, defaultValue }: { children: React.ReactNode; defaultValue?: string }) => {
+  const [selected, setSelected] = React.useState<string | null>(defaultValue || null);
   return (
-    <AccordionPrimitive.Item
-      data-slot="accordion-item"
-      className={cn("border-b last:border-b-0", className)}
-      {...props}
-    />
-  )
-}
+    <AccordionContext.Provider value={{ selected, setSelected }}>
+      <div style={{ borderTop: '1px solid var(--border)' }}>{children}</div>
+    </AccordionContext.Provider>
+  );
+};
 
-function AccordionTrigger({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
-  return (
-    <AccordionPrimitive.Header className="flex">
-      <AccordionPrimitive.Trigger
-        data-slot="accordion-trigger"
-        className={cn(
-          "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
-      </AccordionPrimitive.Trigger>
-    </AccordionPrimitive.Header>
-  )
-}
+// Represents a single item in the accordion
+const AccordionItem = ({ children, value }: { children: React.ReactNode; value: string }) => (
+  <div style={{ borderBottom: '1px solid var(--border)' }}>
+    {React.Children.map(children, child =>
+      React.isValidElement(child) ? React.cloneElement(child, { value } as React.Attributes) : child
+    )}
+  </div>
+);
 
-function AccordionContent({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+// The part of the item that is always visible and clickable
+const AccordionTrigger = ({ children, value }: { children: React.ReactNode; value?: string }) => {
+  const { selected, setSelected } = React.useContext(AccordionContext);
+  const isOpen = selected === value;
   return (
-    <AccordionPrimitive.Content
-      data-slot="accordion-content"
-      className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
-      {...props}
+    <button
+      onClick={() => setSelected(isOpen ? null : value || null)}
+      style={{
+        width: '100%',
+        padding: '1rem',
+        border: 'none',
+        background: 'none',
+        textAlign: 'left',
+        fontWeight: '600',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
-      <div className={cn("pt-0 pb-4", className)}>{children}</div>
-    </AccordionPrimitive.Content>
-  )
-}
+      {children}
+      <span style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>+</span>
+    </button>
+  );
+};
+
+// The content part that is hidden or shown
+const AccordionContent = ({ children, value }: { children: React.ReactNode; value?: string }) => {
+  const { selected } = React.useContext(AccordionContext);
+  const isOpen = selected === value;
+  return isOpen ? <div style={{ padding: '0 1rem 1rem 1rem' }}>{children}</div> : null;
+};
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }

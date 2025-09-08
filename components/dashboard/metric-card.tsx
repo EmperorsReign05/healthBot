@@ -1,27 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LucideProps } from "lucide-react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { Card } from "@/components/ui/card";
+import type { LucideProps } from "lucide-react";
 
 interface MetricCardProps {
-  title: string
-  value: string
-  change?: string // Make the change prop optional
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
+  title: string;
+  value: string;
+  icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref">>;
 }
 
-export function MetricCard({ title, value, change, icon: Icon }: MetricCardProps) {
+export function MetricCard({ title, value, icon: Icon }: MetricCardProps) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        {change && (
-          <p className="text-xs text-muted-foreground">{change} from last month</p>
-        )}
-      </CardContent>
+      <div style={{ padding: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: '500' }}>{title}</h3>
+          <Icon style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
+        </div>
+        <p style={{ fontSize: '1.875rem', fontWeight: '700', marginTop: '0.5rem' }}>{value}</p>
+      </div>
     </Card>
-  )
+  );
 }

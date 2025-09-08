@@ -9,10 +9,9 @@ import { MicButton } from "./mic-button";
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isLoading: boolean;
-  language: "en" | "hi";
 }
 
-export function ChatInput({ onSendMessage, isLoading, language }: ChatInputProps) {
+export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +22,6 @@ export function ChatInput({ onSendMessage, isLoading, language }: ChatInputProps
     }
   };
 
-  // This function will be called by the MicButton with the live transcript
   const handleTranscript = (text: string) => {
     setInputValue(text);
   };
@@ -31,18 +29,29 @@ export function ChatInput({ onSendMessage, isLoading, language }: ChatInputProps
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full items-center space-x-2 p-2"
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '0.5rem', 
+        width: '100%' // Ensure form takes full width
+      }}
     >
-      <MicButton language={language} onTranscript={handleTranscript} />
+      <MicButton onTranscript={handleTranscript} />
       <Input
         type="text"
-        placeholder={language === "en" ? "Type a message..." : "संदेश टाइप करें..."}
+        placeholder="Type a message..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         disabled={isLoading}
+        style={{ flexGrow: 1 }} // Allow input to take available space
       />
-      <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()}>
-        <Send className="h-4 w-4" />
+      <Button 
+        type="submit" 
+        variant="primary" 
+        disabled={isLoading || !inputValue.trim()}
+        style={{ flexShrink: 0 }} // Prevent the button from shrinking
+      >
+        <Send style={{ height: '1rem', width: '1rem' }} />
       </Button>
     </form>
   );
