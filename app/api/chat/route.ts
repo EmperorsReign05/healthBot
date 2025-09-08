@@ -20,34 +20,32 @@ export async function POST(req: Request) {
     console.log('Received message:', message);
     console.log('Language:', language);
 
+    // Fallback: use original message for retrieval to restore previous behavior
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const retrievalQuery = message;
+
     // Get vector store and search for relevant context
     const vectorStore = await getVectorStore();
-    const retrievedContext = await vectorStore.getRelevantContext(message, 0.15);
+    const retrievedContext = await vectorStore.getRelevantContext(retrievalQuery, 0.15);
 
     console.log('Retrieved context length:', retrievedContext.length);
 
     // Initialize Gemini model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `You are Swasthya Mitra, a public health assistant for India.
+    const prompt = `System:
+You are Swasthya Mitra, a helpful public health assistant. Use ONLY the context below. If the answer is missing, reply exactly with ${language === "hi" ? '"डेटासेट में यह जानकारी उपलब्ध नहीं है।"' : '"Not found in dataset."'}. Otherwise, compose a clear, single paragraph in ${language === "hi" ? 'Hindi' : 'English'} for laypersons, integrating relevant fields (Symptoms, Prevention, Treatment, Year, Region, Source). If the question asks for symptoms and prevention, include both when available.
 
-Context from health database:
+Context (multiple records):
 ${retrievedContext}
 
-User's question: ${message}
-
-Instructions:
-1. Answer based primarily on the provided context
-2. If context is insufficient, provide general health guidance
-3. Focus on Indian public health data and conditions
-4. Always include appropriate disclaimers
-5. Be empathetic and helpful
-6. Respond in ${language === "hi" ? "Hindi" : "English"}
-
-Important: If context is present, explicitly cite which conditions/years/sources from the context you used. Always end with "यह चिकित्सा सलाह नहीं है। कृपया डॉक्टर से सलाह लें।" (This is not medical advice. Please consult a doctor.) if responding in Hindi, or "This is not medical advice. Please consult a doctor." if responding in English.`;
+User question:
+${message}`;
 
     // Generate response using Gemini
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt.slice(0, 12000) }] }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 768 }
+    });
     const response = await result.response;
     const text = response.text();
 
