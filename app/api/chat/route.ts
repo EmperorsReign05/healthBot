@@ -1,6 +1,7 @@
 // app/api/chat/route.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getVectorStore } from '../../../lib/simpleVectorStore';
+import { answerFromKeywords } from '../../../lib/keywordQA.js';
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -20,15 +21,28 @@ export async function POST(req: Request) {
     console.log('Received message:', message);
     console.log('Language:', language);
 
-    // Fallback: use original message for retrieval to restore previous behavior
+    // Use original message for retrieval and LLM synthesis
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const retrievalQuery = message;
 
-    // Get vector store and search for relevant context
+    // Build context from deterministic keywords AND vector search, then always call LLM
+    const keywordContext = await answerFromKeywords(retrievalQuery, { language });
     const vectorStore = await getVectorStore();
-    const retrievedContext = await vectorStore.getRelevantContext(retrievalQuery, 0.15);
+    // If Hindi, try translating to English ONLY for retrieval to help vector search
+    let vectorQuery = retrievalQuery
+    if (language === 'hi') {
+      try {
+        const tr = await model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: `Translate to English, minimal, no extra words:\n${retrievalQuery}` }] }],
+          generationConfig: { temperature: 0.0, maxOutputTokens: 64 }
+        })
+        vectorQuery = tr.response.text().trim() || retrievalQuery
+      } catch {}
+    }
+    const vectorContext = await vectorStore.getRelevantContext(vectorQuery, 0.12);
+    const retrievedContext = [keywordContext, vectorContext].filter(Boolean).join('\n\n');
 
-    console.log('Retrieved context length:', retrievedContext.length);
+    console.log('Retrieved context length:', retrievedContext?.length || 0);
 
     // Initialize Gemini model
 
