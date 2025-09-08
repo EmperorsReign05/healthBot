@@ -1,5 +1,6 @@
 "use client"
 
+import { format } from "date-fns" // 1. Import the format function
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Bot, User } from "lucide-react"
@@ -12,7 +13,7 @@ interface MessageBubbleProps {
   isTyping?: boolean
 }
 
-export function MessageBubble({ message, language, isTyping }: MessageBubbleProps) {
+export function MessageBubble({ message, isTyping, language }: MessageBubbleProps) {
   const isBot = message.sender === "bot"
 
   return (
@@ -35,10 +36,8 @@ export function MessageBubble({ message, language, isTyping }: MessageBubbleProp
         )}
 
         <span className="text-xs text-muted-foreground">
-          {message.timestamp.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {/* 2. Replace toLocaleTimeString with the format function */}
+          {format(new Date(message.timestamp), "p")}
         </span>
       </div>
 
