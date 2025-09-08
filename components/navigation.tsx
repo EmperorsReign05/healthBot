@@ -4,13 +4,16 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { MessageCircle, Map, BarChart3, Info } from "lucide-react"
+import { MessageCircle, Map, BarChart3, Info, Syringe, HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+// Added Vaccination and FAQ to the navItems array
 const navItems = [
   { href: "/chat", label: "Chat", icon: MessageCircle },
-  { href: "/map", label: "Health Map", icon: Map },
+ 
   { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { href: "/vaccination", label: "Vaccination", icon: Syringe },
+  { href: "/faq", label: "FAQ", icon: HelpCircle },
   { href: "/about", label: "About", icon: Info },
 ]
 

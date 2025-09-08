@@ -1,0 +1,32 @@
+[
+    {
+      "vaccine": "BCG",
+      "dose": "1st",
+      "age": "At birth",
+      "disease": "Tuberculosis"
+    },
+    {
+      "vaccine": "Hepatitis B",
+      "dose": "Birth dose",
+      "age": "At birth",
+      "disease": "Hepatitis B"
+    },
+    {
+      "vaccine": "OPV",
+      "dose": "0 dose",
+      "age": "At birth",
+      "disease": "Poliomyelitis"
+    },
+    {
+      "vaccine": "OPV",
+      "dose": "1st, 2nd & 3rd dose",
+      "age": "6, 10 & 14 weeks",
+      "disease": "Poliomyelitis"
+    },
+    {
+      "vaccine": "DPT",
+      "dose": "1st, 2nd & 3rd dose",
+      "age": "6, 10 & 14 weeks",
+      "disease": "Diphtheria, Pertussis, Tetanus"
+    }
+  ]
