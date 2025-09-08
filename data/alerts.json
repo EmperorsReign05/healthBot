@@ -1,0 +1,82 @@
+[
+  {
+    "state": "Rajasthan",
+    "district": "Jaipur",
+    "disease": "Dengue",
+    "week_iso": "2025-W36",
+    "level": "Warning",
+    "cases": 134,
+    "lat": 26.9124,
+    "lng": 75.7873
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Mumbai",
+    "disease": "Malaria",
+    "week_iso": "2025-W36",
+    "level": "Watch",
+    "cases": 57,
+    "lat": 19.076,
+    "lng": 72.8777
+  },
+  {
+    "state": "West Bengal",
+    "district": "Kolkata",
+    "disease": "Diarrhea",
+    "week_iso": "2025-W36",
+    "level": "Outbreak",
+    "cases": 289,
+    "lat": 22.5726,
+    "lng": 88.3639
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Chennai",
+    "disease": "Dengue",
+    "week_iso": "2025-W36",
+    "level": "Watch",
+    "cases": 78,
+    "lat": 13.0827,
+    "lng": 80.2707
+  },
+  {
+    "state": "Karnataka",
+    "district": "Bangalore",
+    "disease": "Malaria",
+    "week_iso": "2025-W36",
+    "level": "None",
+    "cases": 12,
+    "lat": 12.9716,
+    "lng": 77.5946
+  },
+  {
+    "state": "Gujarat",
+    "district": "Ahmedabad",
+    "disease": "Diarrhea",
+    "week_iso": "2025-W36",
+    "level": "Warning",
+    "cases": 156,
+    "lat": 23.0225,
+    "lng": 72.5714
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Lucknow",
+    "disease": "Dengue",
+    "week_iso": "2025-W36",
+    "level": "Watch",
+    "cases": 89,
+    "lat": 26.8467,
+    "lng": 80.9462
+  },
+  {
+    "state": "Punjab",
+    "district": "Ludhiana",
+    "disease": "Malaria",
+    "week_iso": "2025-W36",
+    "level": "Warning",
+    "cases": 145,
+    "lat": 30.901,
+    "lng": 75.8573
+  }
+]
